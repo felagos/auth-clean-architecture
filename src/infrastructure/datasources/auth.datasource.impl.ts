@@ -7,14 +7,12 @@ import { UserMapper } from '../mappers/user.mapper';
 type HashFunction = (password: string) => string;
 type CompareFunction = (password: string, hashed: string) => boolean;
 
-
 export class AuthDatasourceImpl implements AuthDatasource {
 
   constructor(
     private readonly hashPassword: HashFunction = BcryptAdapter.hash,
     private readonly comparePassword: CompareFunction = BcryptAdapter.compare,
   ) {}
-
 
 
   async login( loginUserDto: LoginUserDto ): Promise<UserEntity> {
@@ -35,21 +33,17 @@ export class AuthDatasourceImpl implements AuthDatasource {
       throw CustomError.internalServer();
     }
 
-
   }
 
-  
   async register( registerUserDto: RegisterUserDto ): Promise<UserEntity> {
     
     const { name, email, password } = registerUserDto;
 
     try {
 
-      // 1. Verificar si el correo existe
       const exists = await UserModel.findOne({ email });
       if ( exists ) throw CustomError.badRequest('User already exists');
       
-      // 2. Hash de contraseña
       const user = await UserModel.create({
         name: name,
         email: email,
